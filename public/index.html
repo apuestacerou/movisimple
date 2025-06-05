@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MoviSimple</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Registro -->
+  <div id="register-section">
+    <h2>Register</h2>
+    <form id="register-form">
+      <input type="text" id="reg-name" placeholder="Name" required>
+      <input type="email" id="reg-email" placeholder="Email" required>
+      <input type="password" id="reg-password" placeholder="Password" required>
+      <button type="submit">Register</button>
+    </form>
+    <button id="go-login-btn" type="button" style="margin-top:10px;">Iniciar sesión</button>
+  </div>
+
+  <!-- Login -->
+  <div id="login-section" style="display:none;">
+    <h2>Login</h2>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-password" placeholder="Password" required>
+      <button type="submit">Log in</button>
+    </form>
+  </div>
+
+  <!-- Solicitud de Viaje -->
+  <div id="trip-section" style="display:none;">
+    <h2>Trip Request</h2>
+    <button id="logout-btn" type="button" style="float:right;margin-top:-40px;">Cerrar sesión</button>
+    <div id="graph-container">
+      <!-- Aquí irá el SVG del grafo -->
+    </div>
+    <div>
+      <label for="origin-select">Origin:</label>
+      <select id="origin-select">
+        <option value="">Select origin</option>
+        <option value="0">1</option>
+        <option value="1">2</option>
+        <option value="2">3</option>
+        <option value="3">4</option>
+        <option value="4">5</option>
+        <option value="5">6</option>
+      </select>
+      <label for="destination-select">Destination:</label>
+      <select id="destination-select">
+        <option value="">Select destination</option>
+        <option value="0">1</option>
+        <option value="1">2</option>
+        <option value="2">3</option>
+        <option value="3">4</option>
+        <option value="4">5</option>
+        <option value="5">6</option>
+      </select>
+      <button id="calculate-btn" disabled>Calculate Route</button>
+    </div>
+    <div id="progress-bar-container" style="display:none;">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
