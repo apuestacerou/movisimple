@@ -265,10 +265,10 @@ calculateBtn.addEventListener('click', async function() {
         }, 2500);
         return;
       }
-      // Calcula el peso de la arista actual
+      // Calcula el peso de la arista actual usando edges
       const u = path[step], v = path[step+1];
       let w = 1;
-      for (const [a,b,ww] of [[1,2,2],[2,3,7],[3,5,9],[5,6,5],[6,1,6]]) {
+      for (const [a,b,ww] of edges) {
         if ((a === u && b === v) || (a === v && b === u)) { w = ww; break; }
       }
       const percent = Math.round(((step+1)/(path.length-1))*100);
