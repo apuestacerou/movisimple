@@ -3,14 +3,14 @@ const fs = require('fs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
 // --- Registro de usuario ---
-app.post('/register', (req, res) => {
+app.post('/api/register', (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) return res.status(400).json({ error: 'Missing fields' });
 
@@ -24,7 +24,7 @@ app.post('/register', (req, res) => {
 });
 
 // --- Login de usuario ---
-app.post('/login', (req, res) => {
+app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Missing fields' });
 
@@ -78,7 +78,7 @@ class GraphSimple {
   }
 }
 
-// --- Definición de aristas (puedes mover esto a edges.txt si prefieres) ---
+// --- Definición de aristas ---
 const EDGES = [
   [0,1,4],[1,2,2],[2,3,7],[3,4,3],[4,5,5],[5,0,6],[0,3,8],[1,4,1],[2,5,9]
 ];
@@ -87,7 +87,7 @@ const graph = new GraphSimple(EDGES);
 // --- Endpoint para calcular ruta ---
 const TARIFF = 1; // $1 por segundo
 
-app.post('/route', (req, res) => {
+app.post('/api/route', (req, res) => {
   const { origin, destination } = req.body;
   if (origin == null || destination == null) return res.status(400).json({ error: 'Missing nodes' });
 
@@ -107,4 +107,5 @@ app.post('/route', (req, res) => {
 app.listen(PORT, () => {
   console.log(`MoviSimple backend running on http://localhost:${PORT}`);
 });
+
 module.exports = app;

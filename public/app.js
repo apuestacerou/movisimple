@@ -39,7 +39,7 @@ registerForm.addEventListener('submit', async function(e) {
   const email = document.getElementById('reg-email').value.trim();
   const password = document.getElementById('reg-password').value;
   try {
-    const res = await fetch('/api/server/register', {
+    const res = await fetch('/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
@@ -61,7 +61,7 @@ loginForm.addEventListener('submit', async function(e) {
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   try {
-    const res = await fetch('/api/server/register', {
+    const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -197,7 +197,7 @@ calculateBtn.addEventListener('click', async function() {
 
   // Llama al backend para calcular la ruta
   try {
-    const res = await fetch('/api/server/register', {
+    const res = await fetch('/api/route', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ origin: selectedOrigin, destination: selectedDestination })
