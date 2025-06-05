@@ -180,16 +180,17 @@ function handleNodeClick(nodeIndex) {
 
 function calculateRoute() {
   if (selectedOrigin === null || selectedDestination === null) return;
-  
   const path = dijkstra(selectedOrigin, selectedDestination);
   if (path) {
     drawGraph(path);
     const totalDistance = calculateTotalDistance(path);
     progressBar.style.width = '100%';
     progressBar.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km)`;
+    resultDiv.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km)`;
   } else {
     progressBar.style.width = '100%';
     progressBar.textContent = 'No se encontró ruta';
+    resultDiv.textContent = 'No se encontró ruta';
   }
 }
 
