@@ -2,9 +2,8 @@
 const registerSection = document.getElementById('register-section');
 const loginSection = document.getElementById('login-section');
 const tripSection = document.getElementById('trip-section');
-
-// Simulación de estado de autenticación
-let isAuthenticated = false;
+const goLoginBtn = document.getElementById('go-login-btn');
+const logoutBtn = document.getElementById('logout-btn');
 
 function showSection(section) {
   registerSection.style.display = 'none';
@@ -13,10 +12,13 @@ function showSection(section) {
   section.style.display = 'block';
 }
 
+goLoginBtn.addEventListener('click', () => showSection(loginSection));
+logoutBtn.addEventListener('click', () => showSection(registerSection));
+
 // Inicialmente mostrar registro
 showSection(registerSection);
 
-// --- Cambio entre registro y login (ahora con backend) ---
+// --- Cambio entre registro y login (con backend) ---
 const registerForm = document.getElementById('register-form');
 const loginForm = document.getElementById('login-form');
 
@@ -68,7 +70,6 @@ loginForm.addEventListener('submit', async function(e) {
     });
     const data = await res.json();
     if (res.ok) {
-      isAuthenticated = true;
       showSection(tripSection);
       drawGraph();
     } else {
@@ -251,23 +252,4 @@ calculateBtn.addEventListener('click', async function() {
     resultDiv.textContent = 'Error de conexión con el servidor';
     progressBarContainer.style.display = 'none';
   }
-});
-
-// --- Botón para ir a login desde registro ---
-const goLoginBtn = document.getElementById('go-login-btn');
-goLoginBtn.addEventListener('click', function() {
-  showSection(loginSection);
-});
-
-// --- Botón para cerrar sesión desde la pantalla de viajes ---
-const logoutBtn = document.getElementById('logout-btn');
-logoutBtn.addEventListener('click', function() {
-  isAuthenticated = false;
-  selectedOrigin = null;
-  selectedDestination = null;
-  document.getElementById('origin-select').value = '';
-  document.getElementById('destination-select').value = '';
-  drawGraph();
-  updateCalculateBtn();
-  showSection(registerSection);
 }); 
