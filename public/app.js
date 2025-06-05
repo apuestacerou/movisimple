@@ -184,9 +184,10 @@ function calculateRoute() {
   if (path) {
     drawGraph(path);
     const totalDistance = calculateTotalDistance(path);
+    const price = totalDistance;
     progressBar.style.width = '100%';
-    progressBar.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km)`;
-    resultDiv.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km)`;
+    progressBar.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km, $${price})`;
+    resultDiv.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km, $${price})`;
   } else {
     progressBar.style.width = '100%';
     progressBar.textContent = 'No se encontró ruta';
