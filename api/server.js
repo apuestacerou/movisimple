@@ -104,8 +104,8 @@ app.post('/api/route', (req, res) => {
 });
 
 // --- Iniciar servidor ---
-app.listen(PORT, () => {
-  console.log(`MoviSimple backend running on http://localhost:${PORT}`);
-});
+//app.listen(PORT, () => {
+//  console.log(`MoviSimple backend running on http://localhost:${PORT}`);
+//});
 
 module.exports = app;
