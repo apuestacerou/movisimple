@@ -92,9 +92,17 @@ const nodePositions = [
   {x: 60,  y: 80}    // 5 (arriba izquierda)
 ];
 const edges = [
-  [0,1,4],[1,2,2],[2,3,7],[3,4,3],[4,5,5],[5,0,6],[0,3,8],[1,4,1],[2,5,9],
-  [5,4,5], // 6-4
-  [4,2,3]  // 4-2
+  [0,3,4], // 0 (arriba) - centro
+  [1,3,2], // 1 (arriba derecha) - centro
+  [2,3,7], // 2 (abajo derecha) - centro
+  [4,3,3], // 4 (abajo izquierda) - centro
+  [5,3,5], // 5 (arriba izquierda) - centro
+
+  [0,1,6], // 0-1
+  [1,2,8], // 1-2
+  [2,4,9], // 2-4
+  [4,5,5], // 4-5
+  [5,0,6]  // 5-0
 ];
 
 let selectedOrigin = null;
