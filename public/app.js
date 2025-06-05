@@ -84,15 +84,15 @@ loginForm.addEventListener('submit', async function(e) {
 const graphContainer = document.getElementById('graph-container');
 const NODES = 6;
 const nodePositions = [
-  {x: 60, y: 40},
-  {x: 180, y: 40},
-  {x: 240, y: 120},
-  {x: 180, y: 200},
-  {x: 60, y: 200},
-  {x: 0, y: 120}
+  {x: 130, y: 30},   // 0
+  {x: 250, y: 90},   // 1
+  {x: 230, y: 210},  // 2
+  {x: 130, y: 270},  // 3
+  {x: 30,  y: 210},  // 4
+  {x: 10,  y: 90}    // 5
 ];
 const edges = [
-  [0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4],[2,5]
+  [0,1,4],[1,2,2],[2,3,7],[3,4,3],[4,5,5],[5,0,6],[0,3,8],[1,4,1],[2,5,9]
 ];
 
 let selectedOrigin = null;
@@ -101,12 +101,13 @@ let selectedDestination = null;
 function drawGraph(activePath=[]) {
   graphContainer.innerHTML = '';
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', 260);
-  svg.setAttribute('height', 240);
+  svg.setAttribute('width', 280);
+  svg.setAttribute('height', 300);
 
-  // Draw edges
-  edges.forEach(([u,v]) => {
+  // Draw edges and weights
+  edges.forEach(([u, v, w]) => {
     const isActive = activePath.includes(u) && activePath.includes(v) && Math.abs(activePath.indexOf(u) - activePath.indexOf(v)) === 1;
+    // Draw line
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', nodePositions[u].x);
     line.setAttribute('y1', nodePositions[u].y);
@@ -114,6 +115,18 @@ function drawGraph(activePath=[]) {
     line.setAttribute('y2', nodePositions[v].y);
     line.setAttribute('class', 'edge' + (isActive ? ' active' : ''));
     svg.appendChild(line);
+
+    // Draw weight
+    const midX = (nodePositions[u].x + nodePositions[v].x) / 2;
+    const midY = (nodePositions[u].y + nodePositions[v].y) / 2;
+    const weightText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    weightText.setAttribute('x', midX);
+    weightText.setAttribute('y', midY - 5);
+    weightText.setAttribute('text-anchor', 'middle');
+    weightText.setAttribute('font-size', '13');
+    weightText.setAttribute('fill', '#444');
+    weightText.textContent = w;
+    svg.appendChild(weightText);
   });
 
   // Draw nodes
