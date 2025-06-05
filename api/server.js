@@ -3,9 +3,7 @@ const fs = require('fs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -14,7 +12,6 @@ app.post('/api/register', (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) return res.status(400).json({ error: 'Missing fields' });
 
-  // Verifica si el usuario ya existe
   const users = fs.existsSync('users.txt') ? fs.readFileSync('users.txt', 'utf8').split('\n') : [];
   if (users.some(line => line.split(',')[1] === email)) {
     return res.status(409).json({ error: 'User already exists' });
@@ -78,13 +75,11 @@ class GraphSimple {
   }
 }
 
-// --- Definición de aristas ---
 const EDGES = [
   [0,1,4],[1,2,2],[2,3,7],[3,4,3],[4,5,5],[5,0,6],[0,3,8],[1,4,1],[2,5,9]
 ];
 const graph = new GraphSimple(EDGES);
 
-// --- Endpoint para calcular ruta ---
 const TARIFF = 1; // $1 por segundo
 
 app.post('/api/route', (req, res) => {
@@ -102,10 +97,5 @@ app.post('/api/route', (req, res) => {
     cost: cost.toFixed(2)
   });
 });
-
-// --- Iniciar servidor ---
-//app.listen(PORT, () => {
-//  console.log(`MoviSimple backend running on http://localhost:${PORT}`);
-//});
 
 module.exports = app;
