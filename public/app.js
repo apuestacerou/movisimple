@@ -252,4 +252,4 @@ calculateBtn.addEventListener('click', async function() {
     resultDiv.textContent = 'Error de conexión con el servidor';
     progressBarContainer.style.display = 'none';
   }
-}); 
+});
