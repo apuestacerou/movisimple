@@ -198,16 +198,28 @@ const originSelect = document.getElementById('origin-select');
 const destinationSelect = document.getElementById('destination-select');
 
 originSelect.addEventListener('change', function() {
-  selectedOrigin = this.value === '' ? null : parseInt(this.value);
-  if (selectedOrigin === selectedDestination) selectedDestination = null;
-  destinationSelect.value = selectedDestination === null ? '' : selectedDestination;
+  const val = this.value === '' ? null : parseInt(this.value);
+  if (val !== null && val === selectedDestination) {
+    // Si el usuario selecciona el mismo nodo, solo actualiza el origen
+    selectedOrigin = val;
+    selectedDestination = null;
+    destinationSelect.value = '';
+  } else {
+    selectedOrigin = val;
+  }
   drawGraph();
   updateCalculateBtn();
 });
 destinationSelect.addEventListener('change', function() {
-  selectedDestination = this.value === '' ? null : parseInt(this.value);
-  if (selectedOrigin === selectedDestination) selectedOrigin = null;
-  originSelect.value = selectedOrigin === null ? '' : selectedOrigin;
+  const val = this.value === '' ? null : parseInt(this.value);
+  if (val !== null && val === selectedOrigin) {
+    // Si el usuario selecciona el mismo nodo, solo actualiza el destino
+    selectedDestination = val;
+    selectedOrigin = null;
+    originSelect.value = '';
+  } else {
+    selectedDestination = val;
+  }
   drawGraph();
   updateCalculateBtn();
 });
