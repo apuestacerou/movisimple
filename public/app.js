@@ -186,12 +186,25 @@ function calculateRoute() {
     const totalDistance = calculateTotalDistance(path);
     const price = totalDistance;
     progressBar.style.width = '100%';
-    progressBar.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km, $${price})`;
-    resultDiv.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km, $${price})`;
+    progressBar.textContent = '';
+    resultDiv.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km) | Costo: $${price.toFixed(2)}`;
+    // Limpiar selects y resultado después de 5.5 segundos (2.5 + 3)
+    setTimeout(() => {
+      selectedOrigin = null;
+      selectedDestination = null;
+      originSelect.value = '';
+      destinationSelect.value = '';
+      drawGraph();
+      updateCalculateBtn();
+      resultDiv.textContent = '';
+    }, 5500);
   } else {
     progressBar.style.width = '100%';
-    progressBar.textContent = 'No se encontró ruta';
+    progressBar.textContent = '';
     resultDiv.textContent = 'No se encontró ruta';
+    setTimeout(() => {
+      resultDiv.textContent = '';
+    }, 3000);
   }
 }
 
