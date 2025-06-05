@@ -222,68 +222,8 @@ const progressBarContainer = document.getElementById('progress-bar-container');
 const progressBar = document.getElementById('progress-bar');
 const resultDiv = document.getElementById('result');
 
-calculateBtn.addEventListener('click', async function() {
-  if (selectedOrigin === null || selectedDestination === null) return;
-  progressBarContainer.style.display = 'block';
-  progressBar.style.width = '0%';
-  resultDiv.textContent = '';
-
-  // Llama al backend para calcular la ruta
-  try {
-    const res = await fetch('/api/route', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ origin: selectedOrigin, destination: selectedDestination })
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      resultDiv.textContent = data.error || 'Error al calcular la ruta';
-      progressBarContainer.style.display = 'none';
-      return;
-    }
-    // Animación de barra de progreso según el tiempo total
-    const totalTime = data.totalTime;
-    const path = data.path;
-    const cost = data.cost;
-    let progress = 0;
-    let step = 0;
-    drawGraph(path);
-    function animateStep() {
-      if (step >= path.length - 1) {
-        progressBar.style.width = '100%';
-        resultDiv.textContent = `Tiempo total: ${totalTime} segundos | Costo: $${cost}`;
-        setTimeout(() => {
-          progressBarContainer.style.display = 'none';
-          progressBar.style.width = '0%';
-          selectedOrigin = null;
-          selectedDestination = null;
-          originSelect.value = '';
-          destinationSelect.value = '';
-          drawGraph();
-          updateCalculateBtn();
-          resultDiv.textContent = '';
-        }, 2500);
-        return;
-      }
-      // Calcula el peso de la arista actual usando edges
-      const u = path[step], v = path[step+1];
-      let w = 1;
-      for (const [a,b,ww] of edges) {
-        if ((a === u && b === v) || (a === v && b === u)) { w = ww; break; }
-      }
-      const percent = Math.round(((step+1)/(path.length-1))*100);
-      progressBar.style.width = percent + '%';
-      setTimeout(() => {
-        step++;
-        drawGraph(path.slice(0, step+1));
-        animateStep();
-      }, w * 200); // 200ms por segundo simulado
-    }
-    animateStep();
-  } catch (err) {
-    resultDiv.textContent = 'Error de conexión con el servidor';
-    progressBarContainer.style.display = 'none';
-  }
+calculateBtn.addEventListener('click', function() {
+  calculateRoute();
 });
 
 // --- Estructura de grafo con listas de adyacencia ---
