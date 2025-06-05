@@ -286,35 +286,97 @@ calculateBtn.addEventListener('click', async function() {
   }
 });
 
-// --- Algoritmo de Dijkstra ---
-function dijkstra(start, end) {
-  const dist = Array(NODES + 1).fill(Infinity);
-  const prev = Array(NODES + 1).fill(null);
-  const visited = Array(NODES + 1).fill(false);
-  dist[start] = 0;
-
-  for (let i = 1; i <= NODES; i++) {
-    let u = -1;
-    for (let j = 1; j <= NODES; j++) {
-      if (!visited[j] && (u === -1 || dist[j] < dist[u])) u = j;
-    }
-    if (u === -1 || dist[u] === Infinity) break;
-    visited[u] = true;
-    for (const [a, b, w] of edges) {
-      if (a === u && dist[b] > dist[u] + w) {
-        dist[b] = dist[u] + w;
-        prev[b] = u;
+// --- Estructura de grafo con listas de adyacencia ---
+class SimpleGraph {
+  constructor(n) {
+    this.n = n;
+    this.adj = Array.from({length: n + 1}, () => []); // 1-indexed
+  }
+  addEdge(u, v, w) {
+    this.adj[u].push([v, w]);
+    this.adj[v].push([u, w]); // no dirigido
+  }
+  dijkstraSimple(source) {
+    const n = this.n + 1;
+    const dist = Array(n).fill(Infinity);
+    const visited = Array(n).fill(false);
+    dist[source] = 0;
+    for (let i = 1; i <= this.n; i++) {
+      let u = -1;
+      for (let j = 1; j <= this.n; j++) {
+        if (!visited[j] && (u === -1 || dist[j] < dist[u])) u = j;
+      }
+      if (u === -1 || dist[u] === Infinity) break;
+      visited[u] = true;
+      for (const [v, w] of this.adj[u]) {
+        if (!visited[v] && dist[u] + w < dist[v]) {
+          dist[v] = dist[u] + w;
+        }
       }
     }
+    return dist;
   }
-  // Reconstruir el camino
-  const path = [];
-  let curr = end;
-  while (curr !== null) {
-    path.push(curr);
-    curr = prev[curr];
+  // Para reconstruir el camino más corto
+  shortestPath(source, target) {
+    const n = this.n + 1;
+    const dist = Array(n).fill(Infinity);
+    const prev = Array(n).fill(null);
+    const visited = Array(n).fill(false);
+    dist[source] = 0;
+    for (let i = 1; i <= this.n; i++) {
+      let u = -1;
+      for (let j = 1; j <= this.n; j++) {
+        if (!visited[j] && (u === -1 || dist[j] < dist[u])) u = j;
+      }
+      if (u === -1 || dist[u] === Infinity) break;
+      visited[u] = true;
+      for (const [v, w] of this.adj[u]) {
+        if (!visited[v] && dist[u] + w < dist[v]) {
+          dist[v] = dist[u] + w;
+          prev[v] = u;
+        }
+      }
+    }
+    // reconstruir camino
+    const path = [];
+    let curr = target;
+    while (curr !== null) {
+      path.push(curr);
+      curr = prev[curr];
+    }
+    path.reverse();
+    if (path[0] !== source || dist[target] === Infinity) return null;
+    return path;
   }
-  path.reverse();
-  if (path[0] !== start || dist[end] === Infinity) return null;
-  return path;
+}
+
+// --- Crear el grafo y agregar las aristas ---
+const graph = new SimpleGraph(NODES);
+[
+  [1,4,4],
+  [2,4,2],
+  [3,4,7],
+  [5,4,3],
+  [6,4,5],
+  [1,2,6],
+  [2,3,8],
+  [3,5,9],
+  [5,6,5],
+  [6,1,6]
+].forEach(([u,v,w]) => graph.addEdge(u,v,w));
+
+// --- Usar el grafo para rutas y distancias ---
+function dijkstra(start, end) {
+  return graph.shortestPath(start, end);
+}
+
+function calculateTotalDistance(path) {
+  let total = 0;
+  for (let i = 0; i < path.length - 1; i++) {
+    const u = path[i], v = path[i+1];
+    for (const [to, w] of graph.adj[u]) {
+      if (to === v) { total += w; break; }
+    }
+  }
+  return total;
 }
