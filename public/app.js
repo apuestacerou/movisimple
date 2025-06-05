@@ -84,12 +84,12 @@ loginForm.addEventListener('submit', async function(e) {
 const graphContainer = document.getElementById('graph-container');
 const NODES = 6;
 const nodePositions = [
-  {x: 150, y: 40},   // 0 (arriba)
-  {x: 240, y: 90},  // 1 (arriba derecha)
-  {x: 240, y: 190}, // 2 (abajo derecha)
-  {x: 150, y: 135}, // 3 (centro)
-  {x: 60,  y: 190}, // 4 (abajo izquierda)
-  {x: 60,  y: 90}   // 5 (arriba izquierda)
+  {x: 150, y: 40},   // 1 (arriba)
+  {x: 240, y: 90},  // 2 (arriba derecha)
+  {x: 240, y: 190}, // 3 (abajo derecha)
+  {x: 150, y: 135}, // 4 (centro)
+  {x: 60,  y: 190}, // 5 (abajo izquierda)
+  {x: 60,  y: 90}   // 6 (arriba izquierda)
 ];
 const edges = [
   [0,3,4], [1,3,2], [2,3,7], [4,3,3], [5,3,5], // centro a todos
@@ -158,22 +158,30 @@ function drawGraph(activePath=[]) {
 
 drawGraph();
 
-function handleNodeClick(i) {
+function handleNodeClick(nodeIndex) {
   if (selectedOrigin === null) {
-    selectedOrigin = i;
-    document.getElementById('origin-select').value = i;
-  } else if (selectedDestination === null && i !== selectedOrigin) {
-    selectedDestination = i;
-    document.getElementById('destination-select').value = i;
-  } else if (i === selectedOrigin) {
-    selectedOrigin = null;
-    document.getElementById('origin-select').value = '';
-  } else if (i === selectedDestination) {
-    selectedDestination = null;
-    document.getElementById('destination-select').value = '';
+    selectedOrigin = nodeIndex;
+    originSelect.value = nodeIndex + 1;
+  } else if (selectedDestination === null && nodeIndex !== selectedOrigin) {
+    selectedDestination = nodeIndex;
+    destinationSelect.value = nodeIndex + 1;
+    calculateRoute();
   }
-  drawGraph();
-  updateCalculateBtn();
+}
+
+function calculateRoute() {
+  if (selectedOrigin === null || selectedDestination === null) return;
+  
+  const path = dijkstra(selectedOrigin, selectedDestination);
+  if (path) {
+    drawGraph(path);
+    const totalDistance = calculateTotalDistance(path);
+    progressBar.style.width = '100%';
+    progressBar.textContent = `Ruta encontrada: ${path.map(n => n+1).join(' → ')} (${totalDistance} km)`;
+  } else {
+    progressBar.style.width = '100%';
+    progressBar.textContent = 'No se encontró ruta';
+  }
 }
 
 // --- Selects para origen/destino ---
@@ -181,16 +189,16 @@ const originSelect = document.getElementById('origin-select');
 const destinationSelect = document.getElementById('destination-select');
 
 originSelect.addEventListener('change', function() {
-  selectedOrigin = this.value === '' ? null : parseInt(this.value);
+  selectedOrigin = this.value === '' ? null : parseInt(this.value) - 1;
   if (selectedOrigin === selectedDestination) selectedDestination = null;
-  destinationSelect.value = selectedDestination === null ? '' : selectedDestination;
+  destinationSelect.value = selectedDestination === null ? '' : selectedDestination + 1;
   drawGraph();
   updateCalculateBtn();
 });
 destinationSelect.addEventListener('change', function() {
-  selectedDestination = this.value === '' ? null : parseInt(this.value);
+  selectedDestination = this.value === '' ? null : parseInt(this.value) - 1;
   if (selectedOrigin === selectedDestination) selectedOrigin = null;
-  originSelect.value = selectedOrigin === null ? '' : selectedOrigin;
+  originSelect.value = selectedOrigin === null ? '' : selectedOrigin + 1;
   drawGraph();
   updateCalculateBtn();
 });
