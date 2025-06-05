@@ -84,12 +84,12 @@ loginForm.addEventListener('submit', async function(e) {
 const graphContainer = document.getElementById('graph-container');
 const NODES = 6;
 const nodePositions = [
-  {x: 130, y: 30},   // 0
-  {x: 250, y: 90},   // 1
-  {x: 230, y: 210},  // 2
-  {x: 130, y: 270},  // 3
-  {x: 30,  y: 210},  // 4
-  {x: 10,  y: 90}    // 5
+  {x: 140, y: 40},   // 0 (arriba)
+  {x: 240, y: 110},  // 1 (arriba derecha)
+  {x: 210, y: 230},  // 2 (abajo derecha)
+  {x: 140, y: 160},  // 3 (centro)
+  {x: 70,  y: 230},  // 4 (abajo izquierda)
+  {x: 40,  y: 110}   // 5 (arriba izquierda)
 ];
 const edges = [
   [0,1,4],[1,2,2],[2,3,7],[3,4,3],[4,5,5],[5,0,6],[0,3,8],[1,4,1],[2,5,9]
