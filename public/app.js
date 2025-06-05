@@ -199,14 +199,14 @@ const destinationSelect = document.getElementById('destination-select');
 originSelect.addEventListener('change', function() {
   selectedOrigin = this.value === '' ? null : parseInt(this.value) - 1;
   if (selectedOrigin === selectedDestination) selectedDestination = null;
-  destinationSelect.value = selectedDestination === null ? '' : selectedDestination + 1;
+  destinationSelect.value = selectedDestination === null ? '' : (selectedDestination + 1);
   drawGraph();
   updateCalculateBtn();
 });
 destinationSelect.addEventListener('change', function() {
   selectedDestination = this.value === '' ? null : parseInt(this.value) - 1;
   if (selectedOrigin === selectedDestination) selectedOrigin = null;
-  originSelect.value = selectedOrigin === null ? '' : selectedOrigin + 1;
+  originSelect.value = selectedOrigin === null ? '' : (selectedOrigin + 1);
   drawGraph();
   updateCalculateBtn();
 });
