@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoviSimple</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- Registro -->
@@ -65,9 +64,33 @@
     <div id="result"></div>
   </div>
 
-  <script src="app.js"></script>
   <footer style="text-align:center; margin-top: 32px; color: #888; font-size: 0.95em;">
     VERSION 1.0 CREADO POR HUMBERTO FAJARDO - KEVIN MUÑOZ
   </footer>
+
+  <script>
+    // Detectar error de carga de app.js
+    var script = document.createElement('script');
+    script.src = 'app.js';
+    script.onerror = function() {
+      var errorDiv = document.createElement('div');
+      errorDiv.style = 'color: red; font-weight: bold; margin: 20px;';
+      errorDiv.textContent = 'Error: No se pudo cargar app.js. Verifica la configuración de rutas y archivos en Vercel.';
+      document.body.insertBefore(errorDiv, document.body.firstChild);
+    };
+    document.body.appendChild(script);
+
+    // Detectar error de carga de style.css
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'style.css';
+    link.onerror = function() {
+      var errorDiv = document.createElement('div');
+      errorDiv.style = 'color: red; font-weight: bold; margin: 20px;';
+      errorDiv.textContent = 'Error: No se pudo cargar style.css. Verifica la configuración de rutas y archivos en Vercel.';
+      document.body.insertBefore(errorDiv, document.body.firstChild);
+    };
+    document.head.appendChild(link);
+  </script>
 </body>
 </html>
