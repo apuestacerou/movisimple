@@ -84,24 +84,25 @@ loginForm.addEventListener('submit', async function(e) {
 const graphContainer = document.getElementById('graph-container');
 const NODES = 6;
 const nodePositions = [
+  null, // índice 0 no se usa
   {x: 150, y: 40},   // 1 (arriba)
-  {x: 240, y: 90},  // 2 (arriba derecha)
-  {x: 240, y: 190}, // 3 (abajo derecha)
-  {x: 150, y: 135}, // 4 (centro)
-  {x: 60,  y: 190}, // 5 (abajo izquierda)
-  {x: 60,  y: 90}   // 6 (arriba izquierda)
+  {x: 240, y: 90},   // 2 (arriba derecha)
+  {x: 240, y: 190},  // 3 (abajo derecha)
+  {x: 150, y: 135},  // 4 (centro)
+  {x: 60,  y: 190},  // 5 (abajo izquierda)
+  {x: 60,  y: 90}    // 6 (arriba izquierda)
 ];
 const edges = [
-  [0,3,4], [3,0,4],
-  [1,3,2], [3,1,2],
-  [2,3,7], [3,2,7],
-  [4,3,3], [3,4,3],
-  [5,3,5], [3,5,5],
-  [0,1,6], [1,0,6],
-  [1,2,8], [2,1,8],
-  [2,4,9], [4,2,9],
-  [4,5,5], [5,4,5],
-  [5,0,6], [0,5,6]
+  [1,4,4], [4,1,4],
+  [2,4,2], [4,2,2],
+  [3,4,7], [4,3,7],
+  [5,4,3], [4,5,3],
+  [6,4,5], [4,6,5],
+  [1,2,6], [2,1,6],
+  [2,3,8], [3,2,8],
+  [3,5,9], [5,3,9],
+  [5,6,5], [6,5,5],
+  [6,1,6], [1,6,6]
 ];
 
 let selectedOrigin = null;
@@ -116,7 +117,6 @@ function drawGraph(activePath=[]) {
   // Draw edges and weights
   edges.forEach(([u, v, w]) => {
     const isActive = activePath.includes(u) && activePath.includes(v) && Math.abs(activePath.indexOf(u) - activePath.indexOf(v)) === 1;
-    // Draw line
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', nodePositions[u].x);
     line.setAttribute('y1', nodePositions[u].y);
@@ -140,7 +140,8 @@ function drawGraph(activePath=[]) {
   });
 
   // Draw nodes
-  nodePositions.forEach((pos, i) => {
+  for (let i = 1; i <= NODES; i++) {
+    const pos = nodePositions[i];
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('cx', pos.x);
     circle.setAttribute('cy', pos.y);
@@ -157,9 +158,9 @@ function drawGraph(activePath=[]) {
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('font-size', '18');
     text.setAttribute('fill', '#fff');
-    text.textContent = (i+1);
+    text.textContent = i;
     svg.appendChild(text);
-  });
+  }
 
   graphContainer.appendChild(svg);
 }
@@ -169,10 +170,10 @@ drawGraph();
 function handleNodeClick(nodeIndex) {
   if (selectedOrigin === null) {
     selectedOrigin = nodeIndex;
-    originSelect.value = nodeIndex + 1;
+    originSelect.value = nodeIndex;
   } else if (selectedDestination === null && nodeIndex !== selectedOrigin) {
     selectedDestination = nodeIndex;
-    destinationSelect.value = nodeIndex + 1;
+    destinationSelect.value = nodeIndex;
     calculateRoute();
   }
 }
@@ -185,7 +186,7 @@ function calculateRoute() {
     drawGraph(path);
     const totalDistance = calculateTotalDistance(path);
     progressBar.style.width = '100%';
-    progressBar.textContent = `Ruta encontrada: ${path.map(n => n+1).join(' → ')} (${totalDistance} km)`;
+    progressBar.textContent = `Ruta encontrada: ${path.map(n => n).join(' → ')} (${totalDistance} km)`;
   } else {
     progressBar.style.width = '100%';
     progressBar.textContent = 'No se encontró ruta';
@@ -197,16 +198,16 @@ const originSelect = document.getElementById('origin-select');
 const destinationSelect = document.getElementById('destination-select');
 
 originSelect.addEventListener('change', function() {
-  selectedOrigin = this.value === '' ? null : parseInt(this.value) - 1;
+  selectedOrigin = this.value === '' ? null : parseInt(this.value);
   if (selectedOrigin === selectedDestination) selectedDestination = null;
-  destinationSelect.value = selectedDestination === null ? '' : (selectedDestination + 1);
+  destinationSelect.value = selectedDestination === null ? '' : selectedDestination;
   drawGraph();
   updateCalculateBtn();
 });
 destinationSelect.addEventListener('change', function() {
-  selectedDestination = this.value === '' ? null : parseInt(this.value) - 1;
+  selectedDestination = this.value === '' ? null : parseInt(this.value);
   if (selectedOrigin === selectedDestination) selectedOrigin = null;
-  originSelect.value = selectedOrigin === null ? '' : (selectedOrigin + 1);
+  originSelect.value = selectedOrigin === null ? '' : selectedOrigin;
   drawGraph();
   updateCalculateBtn();
 });
@@ -267,7 +268,7 @@ calculateBtn.addEventListener('click', async function() {
       // Calcula el peso de la arista actual
       const u = path[step], v = path[step+1];
       let w = 1;
-      for (const [a,b,ww] of [[0,1,4],[1,2,2],[2,3,7],[3,4,3],[4,5,5],[5,0,6],[0,3,8],[1,4,1],[2,5,9]]) {
+      for (const [a,b,ww] of [[1,2,2],[2,3,7],[3,5,9],[5,6,5],[6,1,6]]) {
         if ((a === u && b === v) || (a === v && b === u)) { w = ww; break; }
       }
       const percent = Math.round(((step+1)/(path.length-1))*100);
@@ -287,17 +288,17 @@ calculateBtn.addEventListener('click', async function() {
 
 // --- Algoritmo de Dijkstra ---
 function dijkstra(start, end) {
-  const dist = Array(NODES).fill(Infinity);
-  const prev = Array(NODES).fill(null);
-  const visited = Array(NODES).fill(false);
+  const dist = Array(NODES + 1).fill(Infinity);
+  const prev = Array(NODES + 1).fill(null);
+  const visited = Array(NODES + 1).fill(false);
   dist[start] = 0;
 
-  for (let i = 0; i < NODES; i++) {
+  for (let i = 1; i <= NODES; i++) {
     let u = -1;
-    for (let j = 0; j < NODES; j++) {
+    for (let j = 1; j <= NODES; j++) {
       if (!visited[j] && (u === -1 || dist[j] < dist[u])) u = j;
     }
-    if (dist[u] === Infinity) break;
+    if (u === -1 || dist[u] === Infinity) break;
     visited[u] = true;
     for (const [a, b, w] of edges) {
       if (a === u && dist[b] > dist[u] + w) {
