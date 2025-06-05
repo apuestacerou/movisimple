@@ -284,3 +284,36 @@ calculateBtn.addEventListener('click', async function() {
     progressBarContainer.style.display = 'none';
   }
 });
+
+// --- Algoritmo de Dijkstra ---
+function dijkstra(start, end) {
+  const dist = Array(NODES).fill(Infinity);
+  const prev = Array(NODES).fill(null);
+  const visited = Array(NODES).fill(false);
+  dist[start] = 0;
+
+  for (let i = 0; i < NODES; i++) {
+    let u = -1;
+    for (let j = 0; j < NODES; j++) {
+      if (!visited[j] && (u === -1 || dist[j] < dist[u])) u = j;
+    }
+    if (dist[u] === Infinity) break;
+    visited[u] = true;
+    for (const [a, b, w] of edges) {
+      if (a === u && dist[b] > dist[u] + w) {
+        dist[b] = dist[u] + w;
+        prev[b] = u;
+      }
+    }
+  }
+  // Reconstruir el camino
+  const path = [];
+  let curr = end;
+  while (curr !== null) {
+    path.push(curr);
+    curr = prev[curr];
+  }
+  path.reverse();
+  if (path[0] !== start || dist[end] === Infinity) return null;
+  return path;
+}
