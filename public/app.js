@@ -85,11 +85,11 @@ const graphContainer = document.getElementById('graph-container');
 const NODES = 6;
 const nodePositions = [
   {x: 140, y: 40},   // 0 (arriba)
-  {x: 230, y: 90},  // 1 (arriba derecha)
-  {x: 230, y: 200}, // 2 (abajo derecha)
-  {x: 140, y: 135}, // 3 (centro)
-  {x: 50,  y: 200}, // 4 (abajo izquierda)
-  {x: 50,  y: 90}   // 5 (arriba izquierda)
+  {x: 220, y: 80},   // 1 (arriba derecha)
+  {x: 220, y: 180},  // 2 (abajo derecha)
+  {x: 140, y: 130},  // 3 (centro)
+  {x: 60,  y: 180},  // 4 (abajo izquierda)
+  {x: 60,  y: 80}    // 5 (arriba izquierda)
 ];
 const edges = [
   [0,1,4],[1,2,2],[2,3,7],[3,4,3],[4,5,5],[5,0,6],[0,3,8],[1,4,1],[2,5,9]
