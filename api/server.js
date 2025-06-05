@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
@@ -7,16 +6,18 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// --- Persistencia en memoria para usuarios (solo para demo en Vercel) ---
+const users = [];
+
 // --- Registro de usuario ---
 app.post('/api/register', (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) return res.status(400).json({ error: 'Missing fields' });
 
-  const users = fs.existsSync('users.txt') ? fs.readFileSync('users.txt', 'utf8').split('\n') : [];
-  if (users.some(line => line.split(',')[1] === email)) {
+  if (users.some(user => user.email === email)) {
     return res.status(409).json({ error: 'User already exists' });
   }
-  fs.appendFileSync('users.txt', `${name},${email},${password}\n`);
+  users.push({ name, email, password });
   res.json({ success: true });
 });
 
@@ -25,11 +26,7 @@ app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Missing fields' });
 
-  const users = fs.existsSync('users.txt') ? fs.readFileSync('users.txt', 'utf8').split('\n') : [];
-  const user = users.find(line => {
-    const [n, e, p] = line.split(',');
-    return e === email && p === password;
-  });
+  const user = users.find(user => user.email === email && user.password === password);
   if (!user) return res.status(401).json({ error: 'Invalid credentials' });
   res.json({ success: true });
 });
