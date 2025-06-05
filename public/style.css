@@ -105,4 +105,11 @@ button:not(:disabled):hover {
   font-size: 1.1rem;
   color: #333;
   min-height: 32px;
-} 
+}
+
+footer {
+  margin-top: 48px;
+  color: #888;
+  font-size: 0.95em;
+  text-align: center;
+}
