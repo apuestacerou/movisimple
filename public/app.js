@@ -84,25 +84,16 @@ loginForm.addEventListener('submit', async function(e) {
 const graphContainer = document.getElementById('graph-container');
 const NODES = 6;
 const nodePositions = [
-  {x: 140, y: 40},   // 0 (arriba)
-  {x: 220, y: 80},   // 1 (arriba derecha)
-  {x: 220, y: 180},  // 2 (abajo derecha)
-  {x: 140, y: 130},  // 3 (centro)
-  {x: 60,  y: 180},  // 4 (abajo izquierda)
-  {x: 60,  y: 80}    // 5 (arriba izquierda)
+  {x: 150, y: 40},   // 0 (arriba)
+  {x: 240, y: 90},  // 1 (arriba derecha)
+  {x: 240, y: 190}, // 2 (abajo derecha)
+  {x: 150, y: 135}, // 3 (centro)
+  {x: 60,  y: 190}, // 4 (abajo izquierda)
+  {x: 60,  y: 90}   // 5 (arriba izquierda)
 ];
 const edges = [
-  [0,3,4], // 0 (arriba) - centro
-  [1,3,2], // 1 (arriba derecha) - centro
-  [2,3,7], // 2 (abajo derecha) - centro
-  [4,3,3], // 4 (abajo izquierda) - centro
-  [5,3,5], // 5 (arriba izquierda) - centro
-
-  [0,1,6], // 0-1
-  [1,2,8], // 1-2
-  [2,4,9], // 2-4
-  [4,5,5], // 4-5
-  [5,0,6]  // 5-0
+  [0,3,4], [1,3,2], [2,3,7], [4,3,3], [5,3,5], // centro a todos
+  [0,1,6], [1,2,8], [2,4,9], [4,5,5], [5,0,6]  // anillo externo
 ];
 
 let selectedOrigin = null;
@@ -111,8 +102,8 @@ let selectedDestination = null;
 function drawGraph(activePath=[]) {
   graphContainer.innerHTML = '';
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', 280);
-  svg.setAttribute('height', 300);
+  svg.setAttribute('width', 300);
+  svg.setAttribute('height', 240);
 
   // Draw edges and weights
   edges.forEach(([u, v, w]) => {
@@ -131,10 +122,11 @@ function drawGraph(activePath=[]) {
     const midY = (nodePositions[u].y + nodePositions[v].y) / 2;
     const weightText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     weightText.setAttribute('x', midX);
-    weightText.setAttribute('y', midY - 5);
+    weightText.setAttribute('y', midY - 8);
     weightText.setAttribute('text-anchor', 'middle');
     weightText.setAttribute('font-size', '13');
     weightText.setAttribute('fill', '#444');
+    weightText.setAttribute('background', '#fff');
     weightText.textContent = w;
     svg.appendChild(weightText);
   });
@@ -144,7 +136,7 @@ function drawGraph(activePath=[]) {
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('cx', pos.x);
     circle.setAttribute('cy', pos.y);
-    circle.setAttribute('r', 20);
+    circle.setAttribute('r', 22);
     circle.setAttribute('class', 'node' +
       (selectedOrigin === i ? ' origin' : selectedDestination === i ? ' destination' : ''));
     circle.addEventListener('click', () => handleNodeClick(i));
@@ -153,10 +145,10 @@ function drawGraph(activePath=[]) {
     // Node number
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     text.setAttribute('x', pos.x);
-    text.setAttribute('y', pos.y + 6);
+    text.setAttribute('y', pos.y + 7);
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('font-size', '18');
-    text.setAttribute('fill', '#222');
+    text.setAttribute('fill', '#fff');
     text.textContent = (i+1);
     svg.appendChild(text);
   });
