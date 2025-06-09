@@ -1,0 +1,10 @@
+Frontend (public/):
+index.html: La página principal de la aplicación
+app.js: Contiene la lógica del lado del cliente
+style.css: Estilos y diseño de la interfaz
+Backend (api/):
+server.js: Servidor Node.js que maneja las peticiones del backend
+Configuración:
+vercel.json: Configuración para el despliegue en la plataforma Vercel
+package.json: Define las dependencias y scripts del proyecto
+.git/: Directorio de control de versiones
